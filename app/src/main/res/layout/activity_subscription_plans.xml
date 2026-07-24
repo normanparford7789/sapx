@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/color_bg_light">
+
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/white"
+        app:title="اختر باقة الاشتراك"
+        app:titleTextColor="@color/color_text_dark"
+        app:navigationIconTint="@color/color_text_dark"
+        android:elevation="2dp"/>
+
+    <ProgressBar android:id="@+id/progress_bar"
+        android:layout_width="wrap_content" android:layout_height="wrap_content"
+        android:indeterminateTint="@color/color_primary_brand"
+        android:visibility="gone" android:layout_gravity="center"
+        android:layout_marginTop="48dp"/>
+
+    <TextView android:id="@+id/tv_empty"
+        android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:text="لا توجد باقات متاحة حالياً"
+        android:gravity="center" android:textSize="15sp"
+        android:textColor="@color/color_text_medium"
+        android:visibility="gone" android:padding="32dp"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_plans"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:padding="16dp"
+        android:clipToPadding="false"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:padding="16dp"
+        android:elevation="4dp">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_continue"
+            android:layout_width="match_parent"
+            android:layout_height="54dp"
+            android:text="متابعة الدفع"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="@color/white"
+            app:cornerRadius="14dp"
+            android:backgroundTint="@color/color_primary_brand"
+            android:enabled="false"/>
+
+    </LinearLayout>
+
+</LinearLayout>

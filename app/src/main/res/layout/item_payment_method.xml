@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/cardPaymentMethod"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="8dp"
+    app:cardCornerRadius="14dp"
+    app:cardElevation="2dp"
+    app:cardBackgroundColor="@color/white"
+    app:strokeColor="@color/color_border"
+    app:strokeWidth="1.5dp"
+    app:checkedIconTint="@color/color_primary_brand"
+    app:checkedIconDrawable="@drawable/ic_check_circle"
+    style="?attr/materialCardViewStyle">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp">
+
+        <TextView
+            android:id="@+id/tvMethodName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="شام كاش"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="@color/color_text_dark"/>
+
+    </LinearLayout>
+
+</com.google.android.material.card.MaterialCardView>

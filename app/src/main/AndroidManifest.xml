@@ -20,7 +20,7 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_CAMERA" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
-    <!-- Network — required for license verification -->
+    <!-- Network — required for Supabase and license verification -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
@@ -43,23 +43,87 @@
         android:extractNativeLibs="true"
         android:usesCleartextTraffic="true">
 
-        <!-- Code/license gate — this is the LAUNCHER activity -->
+        <!-- LOGIN — this is the LAUNCHER activity (replaces CodeActivity as entry point) -->
         <activity
-            android:name=".ui.CodeActivity"
+            android:name=".ui.auth.LoginActivity"
             android:exported="true"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
-        <!-- Main app screen — only reachable after code verification -->
+        <!-- REGISTER -->
+        <activity
+            android:name=".ui.auth.RegisterActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize"/>
+
+        <!-- CODE activity kept for backward compatibility (no longer launcher) -->
+        <activity
+            android:name=".ui.CodeActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"/>
+
+        <!-- MAIN app screen -->
         <activity
             android:name=".ui.MainActivity"
             android:exported="false"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize"/>
+
+        <!-- ACCOUNT -->
+        <activity
+            android:name=".ui.account.AccountActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize"/>
+
+        <!-- SUBSCRIPTION PLANS -->
+        <activity
+            android:name=".ui.account.SubscriptionPlansActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"/>
+
+        <!-- PAYMENT -->
+        <activity
+            android:name=".ui.account.PaymentActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize"/>
+
+        <!-- ADMIN DASHBOARD -->
+        <activity
+            android:name=".ui.admin.AdminDashboardActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"/>
+
+        <!-- ADMIN: Subscription Requests -->
+        <activity
+            android:name=".ui.admin.AdminSubscriptionRequestsActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"/>
+
+        <!-- ADMIN: Users -->
+        <activity
+            android:name=".ui.admin.AdminUsersActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"/>
+
+        <!-- ADMIN: Payment Methods -->
+        <activity
+            android:name=".ui.admin.AdminPaymentMethodsActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"/>
+
+        <!-- ADMIN: Stats -->
+        <activity
+            android:name=".ui.admin.AdminStatsActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"/>
 
         <!-- Media preview as floating dialog popup -->
         <activity

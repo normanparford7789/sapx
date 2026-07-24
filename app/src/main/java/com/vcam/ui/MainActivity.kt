@@ -23,10 +23,13 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.switchmaterial.SwitchMaterial
 import com.vcam.R
+import com.vcam.data.AuthManager
+import com.vcam.data.SubscriptionManager
 import com.vcam.databinding.ActivityMainBinding
 import com.vcam.service.ConnectServer
 import com.vcam.service.VCamService
-import com.vcam.utils.LicenseChecker
+import com.vcam.ui.account.AccountActivity
+import com.vcam.ui.auth.LoginActivity
 import com.vcam.utils.MediaSlotManager
 import com.vcam.viewmodel.MainViewModel
 import kotlinx.coroutines.Dispatchers
@@ -79,25 +82,25 @@ class MainActivity : AppCompatActivity() {
         requestPermissions()
         (1..8).forEach { refreshSlotUI(it) }
         binding.btnStartStop.isEnabled = MediaSlotManager.isSlotSet(this, 1)
+
+        // My Account button
+        binding.btnMyAccount.setOnClickListener {
+            startActivity(Intent(this, AccountActivity::class.java))
+        }
     }
 
     override fun onResume() {
         super.onResume()
-        val savedCode = LicenseChecker.getSavedCode(this)
-        if (savedCode == null) { logoutToCodeScreen(); return }
-        lifecycleScope.launch {
-            val result = LicenseChecker.verifyCode(savedCode)
-            if (result == LicenseChecker.VerifyResult.INVALID ||
-                result == LicenseChecker.VerifyResult.SERVER_EMPTY) {
-                LicenseChecker.clearCode(this@MainActivity)
-                logoutToCodeScreen()
-            }
+        // Check auth
+        if (!AuthManager.isLoggedIn()) {
+            goToLogin()
+            return
         }
         refreshLinkUI()
     }
 
-    private fun logoutToCodeScreen() {
-        startActivity(Intent(this, CodeActivity::class.java).apply {
+    private fun goToLogin() {
+        startActivity(Intent(this, LoginActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         })
         finish()
@@ -106,244 +109,156 @@ class MainActivity : AppCompatActivity() {
     // ── Observers ─────────────────────────────────────────────────────────
 
     private fun setupObservers() {
-        viewModel.isServiceRunning.observe(this) { running ->
-            binding.btnStartStop.text = if (running) getString(R.string.stop_vcam)
-                                         else getString(R.string.start_vcam)
-            val color = if (running) R.color.color_stop else R.color.color_start
-            binding.btnStartStop.backgroundTintList =
-                androidx.core.content.res.ResourcesCompat.getColorStateList(resources, color, theme)
-            binding.btnStartStop.setIconResource(if (running) R.drawable.ic_stop else R.drawable.ic_play)
-        }
-
-        viewModel.rootStatus.observe(this) { ok ->
-            binding.tvRootStatus.text = if (ok) getString(R.string.root_granted)
-                                         else getString(R.string.root_denied)
+        viewModel.rootStatus.observe(this) { hasRoot ->
+            binding.tvRootStatus.text = if (hasRoot) getString(R.string.root_granted) else getString(R.string.root_denied)
             binding.tvRootStatus.setTextColor(
-                ContextCompat.getColor(this, if (ok) R.color.color_root_ok else R.color.color_root_fail)
+                getColor(if (hasRoot) R.color.color_root_ok else R.color.color_root_fail)
             )
         }
-
-        viewModel.errorMessage.observe(this) { msg ->
-            if (!msg.isNullOrBlank()) { showSnack(msg); viewModel.clearError() }
+        viewModel.isServiceRunning.observe(this) { running ->
+            binding.btnStartStop.text = if (running) getString(R.string.stop_vcam) else getString(R.string.start_vcam)
+            binding.btnStartStop.backgroundTintList = ContextCompat.getColorStateList(
+                this, if (running) R.color.color_stop else R.color.color_start
+            )
         }
     }
 
-    // ── Slot pickers (1-4 images, 5-8 videos) ─────────────────────────────
+    // ── Slot Pickers ──────────────────────────────────────────────────────
 
     private fun setupSlotPickers() {
-        // Image slots 1-4
-        listOf(
-            R.id.btn_pick_slot_1 to 1,
-            R.id.btn_pick_slot_2 to 2,
-            R.id.btn_pick_slot_3 to 3,
-            R.id.btn_pick_slot_4 to 4,
-        ).forEach { (btnId, slot) ->
-            binding.root.findViewById<View>(btnId)?.setOnClickListener {
-                pendingSlot = slot
-                pickMedia.launch("image/*")
-            }
-        }
-        // Video slots 5-8
-        listOf(
-            R.id.btn_pick_slot_5 to 5,
-            R.id.btn_pick_slot_6 to 6,
-            R.id.btn_pick_slot_7 to 7,
-            R.id.btn_pick_slot_8 to 8,
-        ).forEach { (btnId, slot) ->
-            binding.root.findViewById<View>(btnId)?.setOnClickListener {
-                pendingSlot = slot
-                pickMedia.launch("video/*")
+        for (slot in 1..8) {
+            val cardId = resources.getIdentifier("card_slot_$slot", "id", packageName)
+            val placeholderId = resources.getIdentifier("placeholder_slot_$slot", "id", packageName)
+            val card = findViewById<View>(cardId) ?: continue
+            val placeholder = findViewById<View>(placeholderId) ?: continue
+            listOf(card, placeholder).forEach { v ->
+                v.setOnClickListener {
+                    pendingSlot = slot
+                    val isVideo = slot >= 5
+                    pickMedia.launch(if (isVideo) "video/*" else "image/*")
+                }
             }
         }
     }
-
-    // ── Delete buttons ─────────────────────────────────────────────────────
 
     private fun setupDeleteButtons() {
-        listOf(
-            R.id.btn_delete_slot_1 to 1,
-            R.id.btn_delete_slot_2 to 2,
-            R.id.btn_delete_slot_3 to 3,
-            R.id.btn_delete_slot_4 to 4,
-            R.id.btn_delete_slot_5 to 5,
-            R.id.btn_delete_slot_6 to 6,
-            R.id.btn_delete_slot_7 to 7,
-            R.id.btn_delete_slot_8 to 8,
-        ).forEach { (btnId, slot) ->
-            binding.root.findViewById<ImageButton>(btnId)?.setOnClickListener {
+        for (slot in 1..8) {
+            val btnId = resources.getIdentifier("btn_delete_slot_$slot", "id", packageName)
+            val btn = findViewById<ImageButton>(btnId) ?: continue
+            btn.setOnClickListener {
                 MediaSlotManager.clearSlot(this, slot)
                 refreshSlotUI(slot)
-                if (slot == 1) binding.btnStartStop.isEnabled = false
-                showSnack("تم حذف الحقل $slot")
+                binding.btnStartStop.isEnabled = MediaSlotManager.isSlotSet(this, 1)
             }
         }
     }
-
-    // ── Rotate buttons (images only: 1-4) ──────────────────────────────────
 
     private fun setupRotateButtons() {
-        listOf(
-            R.id.btn_rotate_slot_1 to 1,
-            R.id.btn_rotate_slot_2 to 2,
-            R.id.btn_rotate_slot_3 to 3,
-            R.id.btn_rotate_slot_4 to 4,
-        ).forEach { (btnId, slot) ->
-            val btn = binding.root.findViewById<ImageButton>(btnId) ?: return@forEach
+        for (slot in 1..8) {
+            val btnId = resources.getIdentifier("btn_rotate_slot_$slot", "id", packageName)
+            val btn = findViewById<ImageButton>(btnId) ?: continue
             btn.setOnClickListener {
-                if (!MediaSlotManager.isSlotSet(this, slot)) return@setOnClickListener
-                if (btn.tag == "rotating") return@setOnClickListener
-                btn.tag = "rotating"
-
-                // Animate the slot ImageView rotation (not the button)
-                val ivId = when (slot) {
-                    1 -> R.id.iv_slot_1; 2 -> R.id.iv_slot_2
-                    3 -> R.id.iv_slot_3; 4 -> R.id.iv_slot_4
-                    else -> null
-                }
-                val iv = ivId?.let { binding.root.findViewById<ImageView>(it) }
-                val currentDeg = MediaSlotManager.getSlotRotation(this, slot).toFloat()
-                val targetDeg = currentDeg + 90f
-
-                if (iv != null) {
-                    iv.animate()
-                        .rotation(targetDeg)
-                        .setDuration(250)
-                        .setInterpolator(AccelerateDecelerateInterpolator())
-                        .withEndAction {
-                            iv.rotation = 0f
-                            btn.tag = null
-                        }
-                        .start()
-                } else {
-                    btn.tag = null
-                }
-
-                // Persist rotation (fast, no disk I/O for the image)
-                lifecycleScope.launch {
-                    val newDeg = withContext(Dispatchers.IO) {
-                        MediaSlotManager.rotateSlot(this@MainActivity, slot)
-                    }
-                    showSnack("الحقل $slot — تدوير ${newDeg}°")
-                }
+                val newRot = (MediaSlotManager.getRotation(this, slot) + 90) % 360
+                MediaSlotManager.setRotation(this, slot, newRot)
+                refreshSlotUI(slot)
             }
         }
     }
-
-    // ── Link switch ───────────────────────────────────────────────────────
-
-    private fun setupLinkSwitch() {
-        val sw = binding.root.findViewById<SwitchMaterial>(R.id.switch_link) ?: return
-        sw.isChecked = ConnectServer.isEnabled(this)
-        sw.setOnCheckedChangeListener { _, isChecked ->
-            ConnectServer.setEnabled(this, isChecked)
-            val action = if (isChecked) VCamService.ACTION_ENABLE_LINK
-                         else           VCamService.ACTION_DISABLE_LINK
-            try {
-                startService(Intent(this, VCamService::class.java).apply { this.action = action })
-            } catch (_: Exception) {}
-            refreshLinkUI()
-            showSnack(
-                if (isChecked) getString(R.string.link_enabled_msg)
-                else           getString(R.string.link_disabled_msg)
-            )
-        }
-    }
-
-    private fun refreshLinkUI() {
-        val enabled    = ConnectServer.isEnabled(this)
-        val sw         = binding.root.findViewById<SwitchMaterial>(R.id.switch_link) ?: return
-        val infoLayout = binding.root.findViewById<View>(R.id.layout_link_info) ?: return
-        val tvPort     = binding.root.findViewById<TextView>(R.id.tv_link_port)
-        val tvToken    = binding.root.findViewById<TextView>(R.id.tv_link_token)
-
-        sw.isChecked = enabled
-        infoLayout.visibility = if (enabled) View.VISIBLE else View.GONE
-
-        if (enabled) {
-            tvPort?.text  = getString(R.string.link_port, ConnectServer.PORT)
-            tvToken?.text = getString(R.string.link_token, ConnectServer.getToken(this))
-        }
-    }
-
-    // ── Refresh slot thumbnail ────────────────────────────────────────────
 
     private fun refreshSlotUI(slot: Int) {
-        val ivId = when (slot) {
-            1 -> R.id.iv_slot_1; 2 -> R.id.iv_slot_2; 3 -> R.id.iv_slot_3
-            4 -> R.id.iv_slot_4; 5 -> R.id.iv_slot_5; 6 -> R.id.iv_slot_6
-            7 -> R.id.iv_slot_7; 8 -> R.id.iv_slot_8; else -> return
-        }
-        val placeholderId = when (slot) {
-            1 -> R.id.placeholder_slot_1; 2 -> R.id.placeholder_slot_2
-            3 -> R.id.placeholder_slot_3; 4 -> R.id.placeholder_slot_4
-            5 -> R.id.placeholder_slot_5; 6 -> R.id.placeholder_slot_6
-            7 -> R.id.placeholder_slot_7; 8 -> R.id.placeholder_slot_8
-            else -> return
-        }
-        val deleteBtnId = when (slot) {
-            1 -> R.id.btn_delete_slot_1; 2 -> R.id.btn_delete_slot_2
-            3 -> R.id.btn_delete_slot_3; 4 -> R.id.btn_delete_slot_4
-            5 -> R.id.btn_delete_slot_5; 6 -> R.id.btn_delete_slot_6
-            7 -> R.id.btn_delete_slot_7; 8 -> R.id.btn_delete_slot_8
-            else -> return
-        }
-        val rotateBtnId = when (slot) {
-            1 -> R.id.btn_rotate_slot_1; 2 -> R.id.btn_rotate_slot_2
-            3 -> R.id.btn_rotate_slot_3; 4 -> R.id.btn_rotate_slot_4
-            else -> null
-        }
+        val ivId     = resources.getIdentifier("iv_slot_$slot",          "id", packageName)
+        val phId     = resources.getIdentifier("placeholder_slot_$slot",  "id", packageName)
+        val delBtnId = resources.getIdentifier("btn_delete_slot_$slot",   "id", packageName)
+        val rotBtnId = resources.getIdentifier("btn_rotate_slot_$slot",   "id", packageName)
 
-        val iv          = binding.root.findViewById<ImageView>(ivId)          ?: return
-        val placeholder = binding.root.findViewById<LinearLayout>(placeholderId) ?: return
-        val delBtn      = binding.root.findViewById<ImageButton>(deleteBtnId)  ?: return
-        val rotBtn      = rotateBtnId?.let { binding.root.findViewById<ImageButton>(it) }
+        val iv     = findViewById<ImageView>(ivId)     ?: return
+        val ph     = findViewById<View>(phId)          ?: return
+        val delBtn = findViewById<ImageButton>(delBtnId)
+        val rotBtn = findViewById<ImageButton>(rotBtnId)
 
-        if (MediaSlotManager.isSlotSet(this, slot)) {
-            placeholder.visibility = View.GONE
-            iv.visibility    = View.VISIBLE
-            delBtn.visibility = View.VISIBLE
-            rotBtn?.visibility = if (slot <= 4) View.VISIBLE else View.GONE
-
-            lifecycleScope.launch {
-                val bmp: Bitmap? = withContext(Dispatchers.IO) {
-                    MediaSlotManager.getThumbnail(this@MainActivity, slot)
-                }
-                if (bmp != null) iv.setImageBitmap(bmp)
+        val isSet  = MediaSlotManager.isSlotSet(this, slot)
+        if (isSet) {
+            val path = MediaSlotManager.getSlotPath(this, slot) ?: return
+            val isVideo = MediaSlotManager.isSlotVideo(this, slot)
+            val bmp: Bitmap? = if (isVideo) {
+                try {
+                    val mmr = android.media.MediaMetadataRetriever()
+                    mmr.setDataSource(path)
+                    val frame = mmr.getFrameAtTime(0)
+                    mmr.release()
+                    frame
+                } catch (_: Exception) { null }
+            } else {
+                try { android.graphics.BitmapFactory.decodeFile(path) } catch (_: Exception) { null }
             }
+            val rot = MediaSlotManager.getRotation(this, slot)
+            if (bmp != null) {
+                val matrix = android.graphics.Matrix().apply { postRotate(rot.toFloat()) }
+                val rotated = Bitmap.createBitmap(bmp, 0, 0, bmp.width, bmp.height, matrix, true)
+                iv.setImageBitmap(rotated)
+            }
+            iv.visibility = View.VISIBLE
+            ph.visibility = View.GONE
         } else {
-            placeholder.visibility = View.VISIBLE
-            iv.visibility    = View.GONE
-            delBtn.visibility = View.GONE
-            rotBtn?.visibility = View.GONE
+            iv.setImageBitmap(null)
+            iv.visibility = View.GONE
+            ph.visibility = View.VISIBLE
         }
+        delBtn?.visibility = if (isSet) View.VISIBLE else View.GONE
+        rotBtn?.visibility = if (isSet) View.VISIBLE else View.GONE
     }
 
     // ── Start / Stop ──────────────────────────────────────────────────────
 
     private fun setupStartStop() {
         binding.btnStartStop.setOnClickListener {
-            if (viewModel.isServiceRunning.value == true) stopVCamService()
-            else handleStart()
+            val running = viewModel.isServiceRunning.value ?: false
+            if (running) {
+                stopVCamService()
+            } else {
+                // Check subscription before allowing start
+                lifecycleScope.launch {
+                    val user = AuthManager.currentUser()
+                    if (user == null) { goToLogin(); return@launch }
+                    val hasSub = SubscriptionManager.hasActiveSubscription(user.id)
+                    runOnUiThread {
+                        if (hasSub) {
+                            tryStartVCamService()
+                        } else {
+                            showSubscriptionRequired()
+                        }
+                    }
+                }
+            }
         }
     }
 
-    private fun handleStart() {
+    private fun showSubscriptionRequired() {
+        MaterialAlertDialogBuilder(this)
+            .setTitle(getString(R.string.subscription_required))
+            .setMessage(getString(R.string.subscription_required_msg))
+            .setPositiveButton(getString(R.string.go_to_account)) { _, _ ->
+                startActivity(Intent(this, AccountActivity::class.java))
+            }
+            .setNegativeButton(getString(R.string.cancel), null)
+            .show()
+    }
+
+    private fun tryStartVCamService() {
         if (!MediaSlotManager.isSlotSet(this, 1)) {
-            showSnack(getString(R.string.select_media_first)); return
+            showSnack(getString(R.string.select_media_first))
+            return
         }
-        checkOverlayThenStart()
-    }
-
-    private fun checkOverlayThenStart() {
-        if (!Settings.canDrawOverlays(this)) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
+            !Settings.canDrawOverlays(this)) {
             MaterialAlertDialogBuilder(this)
-                .setTitle(R.string.overlay_permission_title)
-                .setMessage(R.string.overlay_permission_msg)
-                .setPositiveButton(R.string.grant) { _, _ ->
+                .setTitle(getString(R.string.overlay_permission_title))
+                .setMessage(getString(R.string.overlay_permission_msg))
+                .setPositiveButton(getString(R.string.grant)) { _, _ ->
                     overlayPermLauncher.launch(
                         Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
-                            Uri.parse("package:$packageName")))
-                    doStartService()
+                            Uri.parse("package:$packageName"))
+                    )
                 }
                 .setNegativeButton(R.string.skip) { _, _ -> doStartService() }
                 .show()
@@ -368,6 +283,42 @@ class MainActivity : AppCompatActivity() {
     private fun stopVCamService() {
         startService(Intent(this, VCamService::class.java).apply { action = VCamService.ACTION_STOP })
         viewModel.setServiceRunning(false)
+    }
+
+    // ── Link Switch ───────────────────────────────────────────────────────
+
+    private fun setupLinkSwitch() {
+        refreshLinkUI()
+        binding.switchLink.setOnCheckedChangeListener { _, isChecked ->
+            ConnectServer.setEnabled(this, isChecked)
+            if (isChecked) {
+                val intent = Intent(this, VCamService::class.java).apply {
+                    action = VCamService.ACTION_LINK_ENABLE
+                }
+                startService(intent)
+                showSnack(getString(R.string.link_enabled_msg))
+            } else {
+                val intent = Intent(this, VCamService::class.java).apply {
+                    action = VCamService.ACTION_LINK_DISABLE
+                }
+                startService(intent)
+                showSnack(getString(R.string.link_disabled_msg))
+            }
+            refreshLinkUI()
+        }
+    }
+
+    private fun refreshLinkUI() {
+        val enabled = ConnectServer.isEnabled(this)
+        binding.switchLink.isChecked = enabled
+        if (enabled) {
+            val token = ConnectServer.getToken(this)
+            binding.tvLinkToken.text = token
+            binding.tvLinkPort.text = getString(R.string.link_port, ConnectServer.PORT)
+        } else {
+            binding.tvLinkToken.text = "——"
+            binding.tvLinkPort.text = ""
+        }
     }
 
     // ── Permissions ───────────────────────────────────────────────────────

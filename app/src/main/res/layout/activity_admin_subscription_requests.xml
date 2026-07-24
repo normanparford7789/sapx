@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/color_bg_light">
+
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/color_primary_brand"
+        app:title="طلبات الاشتراك"
+        app:titleTextColor="@color/white"
+        app:navigationIconTint="@color/white"
+        android:elevation="4dp"/>
+
+    <com.google.android.material.chip.ChipGroup
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:padding="12dp"
+        app:singleSelection="true"
+        app:selectionRequired="true">
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chip_pending"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="الطلبات المعلقة"
+            style="@style/Widget.MaterialComponents.Chip.Filter"
+            android:checked="true"/>
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chip_all"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="جميع الطلبات"
+            style="@style/Widget.MaterialComponents.Chip.Filter"/>
+
+    </com.google.android.material.chip.ChipGroup>
+
+    <ProgressBar android:id="@+id/progress_bar"
+        android:layout_width="wrap_content" android:layout_height="wrap_content"
+        android:indeterminateTint="@color/color_primary_brand"
+        android:visibility="gone" android:layout_gravity="center"
+        android:layout_marginTop="24dp"/>
+
+    <TextView android:id="@+id/tv_empty"
+        android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:text="لا توجد طلبات" android:gravity="center"
+        android:textSize="15sp" android:textColor="@color/color_text_medium"
+        android:visibility="gone" android:padding="32dp"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_requests"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="12dp"
+        android:clipToPadding="false"/>
+
+</LinearLayout>

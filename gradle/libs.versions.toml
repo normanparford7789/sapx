@@ -11,6 +11,13 @@ activity = "1.9.2"
 libsu = "5.2.2"
 glide = "4.16.0"
 coroutines = "1.9.0"
+supabase = "2.6.1"
+ktor = "2.3.12"
+serialization = "1.7.3"
+googlePlayServices = "21.2.0"
+credentials = "1.3.0"
+googleid = "1.1.1"
+okhttp = "4.12.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -26,7 +33,17 @@ libsu-core = { group = "com.github.topjohnwu.libsu", name = "core", version.ref 
 libsu-service = { group = "com.github.topjohnwu.libsu", name = "service", version.ref = "libsu" }
 glide = { group = "com.github.bumptech.glide", name = "glide", version.ref = "glide" }
 kotlinx-coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "coroutines" }
+kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "serialization" }
+supabase-auth = { group = "io.github.jan-tennert.supabase", name = "auth-kt", version.ref = "supabase" }
+supabase-postgrest = { group = "io.github.jan-tennert.supabase", name = "postgrest-kt", version.ref = "supabase" }
+ktor-client-android = { group = "io.ktor", name = "ktor-client-android", version.ref = "ktor" }
+ktor-client-core = { group = "io.ktor", name = "ktor-client-core", version.ref = "ktor" }
+google-play-services-auth = { group = "com.google.android.gms", name = "play-services-auth", version.ref = "googlePlayServices" }
+androidx-credentials = { group = "androidx.credentials", name = "credentials", version.ref = "credentials" }
+androidx-credentials-play = { group = "androidx.credentials", name = "credentials-play-services-auth", version.ref = "credentials" }
+googleid = { group = "com.google.android.libraries.identity.googleid", name = "googleid", version.ref = "googleid" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }

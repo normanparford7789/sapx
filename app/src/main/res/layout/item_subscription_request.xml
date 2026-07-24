@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="10dp"
+    app:cardCornerRadius="16dp"
+    app:cardElevation="2dp"
+    app:cardBackgroundColor="@color/white">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:orientation="horizontal" android:gravity="center_vertical"
+            android:layout_marginBottom="8dp">
+            <TextView android:id="@+id/tvUserEmail"
+                android:layout_width="0dp" android:layout_height="wrap_content"
+                android:layout_weight="1" android:textSize="15sp"
+                android:textStyle="bold" android:textColor="@color/color_text_dark"/>
+            <com.google.android.material.chip.Chip android:id="@+id/chipStatus"
+                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="معلق" android:textSize="12sp"
+                style="@style/Widget.MaterialComponents.Chip.Entry"/>
+        </LinearLayout>
+
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:orientation="horizontal" android:layout_marginBottom="4dp">
+            <TextView android:layout_width="80dp" android:layout_height="wrap_content"
+                android:text="الباقة:" android:textColor="@color/color_text_medium" android:textSize="13sp"/>
+            <TextView android:id="@+id/tvPlan"
+                android:layout_width="0dp" android:layout_height="wrap_content"
+                android:layout_weight="1" android:textColor="@color/color_text_dark"
+                android:textSize="13sp" android:textStyle="bold"/>
+        </LinearLayout>
+
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:orientation="horizontal" android:layout_marginBottom="4dp">
+            <TextView android:layout_width="80dp" android:layout_height="wrap_content"
+                android:text="الدفع:" android:textColor="@color/color_text_medium" android:textSize="13sp"/>
+            <TextView android:id="@+id/tvPaymentMethod"
+                android:layout_width="0dp" android:layout_height="wrap_content"
+                android:layout_weight="1" android:textColor="@color/color_text_dark" android:textSize="13sp"/>
+        </LinearLayout>
+
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:orientation="horizontal" android:layout_marginBottom="4dp">
+            <TextView android:layout_width="80dp" android:layout_height="wrap_content"
+                android:text="رقم العملية:" android:textColor="@color/color_text_medium" android:textSize="13sp"/>
+            <TextView android:id="@+id/tvTxNumber"
+                android:layout_width="0dp" android:layout_height="wrap_content"
+                android:layout_weight="1" android:textColor="@color/color_primary_brand"
+                android:textSize="13sp" android:textStyle="bold"/>
+        </LinearLayout>
+
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:orientation="horizontal" android:layout_marginBottom="4dp">
+            <TextView android:layout_width="80dp" android:layout_height="wrap_content"
+                android:text="المبلغ:" android:textColor="@color/color_text_medium" android:textSize="13sp"/>
+            <TextView android:id="@+id/tvAmount"
+                android:layout_width="0dp" android:layout_height="wrap_content"
+                android:layout_weight="1" android:textColor="@color/color_success"
+                android:textSize="13sp" android:textStyle="bold"/>
+        </LinearLayout>
+
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:orientation="horizontal" android:layout_marginBottom="12dp">
+            <TextView android:layout_width="80dp" android:layout_height="wrap_content"
+                android:text="التاريخ:" android:textColor="@color/color_text_medium" android:textSize="13sp"/>
+            <TextView android:id="@+id/tvDate"
+                android:layout_width="0dp" android:layout_height="wrap_content"
+                android:layout_weight="1" android:textColor="@color/color_text_medium" android:textSize="13sp"/>
+        </LinearLayout>
+
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnApprove"
+                android:layout_width="0dp" android:layout_height="44dp"
+                android:layout_weight="1" android:layout_marginEnd="6dp"
+                android:text="موافقة" android:textSize="14sp" android:textColor="@color/white"
+                app:cornerRadius="10dp" android:backgroundTint="@color/color_success"/>
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnReject"
+                android:layout_width="0dp" android:layout_height="44dp"
+                android:layout_weight="1" android:layout_marginStart="6dp"
+                android:text="رفض" android:textSize="14sp" android:textColor="@color/white"
+                app:cornerRadius="10dp" android:backgroundTint="@color/color_error"/>
+        </LinearLayout>
+
+    </LinearLayout>
+</androidx.cardview.widget.CardView>

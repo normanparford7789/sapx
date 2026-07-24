@@ -53,4 +53,80 @@
     <string name="link_hint">وصّل الهاتف بالحاسوب عبر USB، ثم شغّل:\nadb forward tcp:7979 tcp:7979\nوأدخل الرمز في تطبيق Conect VCam</string>
     <string name="link_enabled_msg">تم تفعيل الربط — المنفذ 7979</string>
     <string name="link_disabled_msg">تم إيقاف الربط</string>
+
+    <!-- Auth strings -->
+    <string name="fill_all_fields">يرجى تعبئة جميع الحقول</string>
+    <string name="login_failed">فشل تسجيل الدخول. تأكد من البيانات وحاول مرة أخرى</string>
+    <string name="register_failed">فشل إنشاء الحساب. ربما البريد مستخدم مسبقاً</string>
+    <string name="passwords_not_match">كلمتا المرور غير متطابقتين</string>
+    <string name="password_too_short">كلمة المرور يجب أن تكون 6 أحرف على الأقل</string>
+    <string name="account_created">تم إنشاء الحساب بنجاح</string>
+    <string name="login_required">يجب تسجيل الدخول أولاً</string>
+    <string name="logout">تسجيل الخروج</string>
+    <string name="logout_confirm">هل تريد تسجيل الخروج؟</string>
+    <string name="yes">نعم</string>
+    <string name="no">لا</string>
+    <string name="no_name">بدون اسم</string>
+
+    <!-- Subscription strings -->
+    <string name="subscription_active">الاشتراك نشط ✓</string>
+    <string name="no_active_subscription">لا يوجد اشتراك نشط</string>
+    <string name="subscription_permanent">دائم (بلا انتهاء)</string>
+    <string name="expires_on">ينتهي في: %s</string>
+    <string name="subscribe_to_use">اشترك لتفعيل استخدام التطبيق</string>
+    <string name="subscribe_now">اشترك الآن</string>
+    <string name="renew_subscription">تجديد الاشتراك</string>
+    <string name="subscription_required">مطلوب اشتراك</string>
+    <string name="subscription_required_msg">يجب أن يكون لديك اشتراك نشط لاستخدام هذه الميزة.\nاذهب إلى حسابي لتفعيل اشتراك.</string>
+    <string name="go_to_account">اذهب إلى حسابي</string>
+    <string name="my_account">حسابي</string>
+
+    <!-- Plan strings -->
+    <string name="permanent">دائم</string>
+    <string name="days_format">%d يوم</string>
+    <string name="price_format">$%.2f %s</string>
+
+    <!-- Payment strings -->
+    <string name="select_payment_method">يرجى اختيار طريقة الدفع</string>
+    <string name="enter_transaction_number">يرجى إدخال رقم عملية التحويل</string>
+    <string name="transfer_instructions_default">أرسل المبلغ المحدد إلى العنوان أعلاه، ثم أدخل رقم العملية</string>
+    <string name="confirm_request">تأكيد الطلب</string>
+    <string name="confirm_request_msg">هل تريد إرسال طلب اشتراك لباقة %s برقم عملية: %s؟</string>
+    <string name="confirm">تأكيد</string>
+    <string name="cancel">إلغاء</string>
+    <string name="ok">حسناً</string>
+    <string name="request_sent">تم إرسال الطلب</string>
+    <string name="request_sent_msg">تم إرسال طلب اشتراكك بنجاح وهو قيد المراجعة من قبل المدير. ستصلك إشعار عند الموافقة.</string>
+    <string name="error_sending_request">حدث خطأ في إرسال الطلب، حاول مرة أخرى</string>
+
+    <!-- Admin strings -->
+    <string name="approve_request">الموافقة على الطلب</string>
+    <string name="approve_confirm">هل تريد الموافقة على طلب اشتراك: %s؟</string>
+    <string name="reject_request">رفض الطلب</string>
+    <string name="reject_confirm">هل تريد رفض طلب اشتراك: %s؟</string>
+    <string name="approve">موافقة</string>
+    <string name="reject">رفض</string>
+    <string name="request_approved">تمت الموافقة على الطلب وتم تفعيل الاشتراك</string>
+    <string name="request_rejected">تم رفض الطلب</string>
+    <string name="error_occurred">حدث خطأ. حاول مرة أخرى</string>
+    <string name="status_pending">معلق</string>
+    <string name="status_approved">مقبول</string>
+    <string name="status_rejected">مرفوض</string>
+    <string name="ban_user">حظر المستخدم</string>
+    <string name="unban_user">رفع الحظر</string>
+    <string name="make_admin">ترقية لمدير</string>
+    <string name="remove_admin">إلغاء صلاحية المدير</string>
+    <string name="confirm_ban">هل تريد حظر: %s؟</string>
+    <string name="confirm_unban">هل تريد رفع الحظر عن: %s؟</string>
+    <string name="no_plans_available">لا توجد باقات متاحة</string>
+    <string name="activate_subscription">تفعيل اشتراك</string>
+    <string name="activate">تفعيل</string>
+    <string name="activate_verb">تفعيل</string>
+    <string name="subscription_activated">تم تفعيل الاشتراك بنجاح</string>
+    <string name="add_payment_method">إضافة طريقة دفع</string>
+    <string name="add_plan">إضافة باقة</string>
+    <string name="add">إضافة</string>
+    <string name="active">نشط</string>
+    <string name="inactive">معطّل</string>
+    <string name="deactivate">تعطيل</string>
 </resources>

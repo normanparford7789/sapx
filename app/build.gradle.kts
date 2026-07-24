@@ -1,6 +1,7 @@
 plugins {
       alias(libs.plugins.android.application)
       alias(libs.plugins.kotlin.android)
+      alias(libs.plugins.kotlin.serialization)
   }
 
   android {
@@ -15,7 +16,7 @@ plugins {
           versionName = "1.0"
 
           testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-          
+
           ndk {
               abiFilters += listOf("armeabi-v7a", "arm64-v8a")
           }
@@ -26,6 +27,12 @@ plugins {
                   arguments += "-DANDROID_STL=c++_shared"
               }
           }
+
+          // Supabase config — set via GitHub Actions secrets or local.properties
+          buildConfigField("String", "SUPABASE_URL", "\"${System.getenv("SUPABASE_URL") ?: project.findProperty("SUPABASE_URL") ?: ""}\"")
+          buildConfigField("String", "SUPABASE_ANON_KEY", "\"${System.getenv("SUPABASE_ANON_KEY") ?: project.findProperty("SUPABASE_ANON_KEY") ?: ""}\"")
+          // Google OAuth Web Client ID (from Google Cloud Console)
+          buildConfigField("String", "GOOGLE_WEB_CLIENT_ID", "\"${System.getenv("GOOGLE_WEB_CLIENT_ID") ?: project.findProperty("GOOGLE_WEB_CLIENT_ID") ?: ""}\"")
       }
 
       buildTypes {
@@ -52,6 +59,7 @@ plugins {
 
       buildFeatures {
           viewBinding = true
+          buildConfig = true
       }
 
       externalNativeBuild {
@@ -62,9 +70,6 @@ plugins {
       }
 
       packaging {
-          // Preserve the prebuilt injection binaries exactly as-is.
-          // vcplax.so is a PIE executable (not a shared lib); must not be stripped.
-          // libvc.so and libshadowhook.so use symbol-name hooks that must be intact.
           jniLibs {
               keepDebugSymbols += setOf(
                   "**/vcplax.so",
@@ -89,4 +94,17 @@ plugins {
       implementation(libs.libsu.service)
       implementation(libs.glide)
       implementation(libs.kotlinx.coroutines.android)
+
+      // Supabase
+      implementation(libs.supabase.auth)
+      implementation(libs.supabase.postgrest)
+      implementation(libs.ktor.client.android)
+      implementation(libs.ktor.client.core)
+      implementation(libs.kotlinx.serialization.json)
+
+      // Google Sign-In
+      implementation(libs.google.play.services.auth)
+      implementation(libs.androidx.credentials)
+      implementation(libs.androidx.credentials.play)
+      implementation(libs.googleid)
   }

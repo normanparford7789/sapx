@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/color_bg_light">
+
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/white"
+        app:title="حسابي"
+        app:titleTextColor="@color/color_text_dark"
+        app:navigationIconTint="@color/color_text_dark"
+        android:elevation="2dp"/>
+
+    <ProgressBar android:id="@+id/progress_bar"
+        android:layout_width="wrap_content" android:layout_height="wrap_content"
+        android:indeterminateTint="@color/color_primary_brand"
+        android:visibility="gone" android:layout_gravity="center"
+        android:layout_marginTop="48dp"/>
+
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/content_scroll"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="visible">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <!-- User Info Card -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="3dp"
+                app:cardBackgroundColor="@color/white"
+                android:layout_marginBottom="12dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="20dp">
+
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:text="معلومات الحساب"
+                        android:textSize="16sp" android:textStyle="bold"
+                        android:textColor="@color/color_text_dark"
+                        android:layout_marginBottom="16dp"/>
+
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                        android:orientation="horizontal" android:gravity="center_vertical"
+                        android:layout_marginBottom="10dp">
+                        <TextView android:layout_width="100dp" android:layout_height="wrap_content"
+                            android:text="الاسم:" android:textColor="@color/color_text_medium"
+                            android:textSize="14sp"/>
+                        <TextView android:id="@+id/tv_name"
+                            android:layout_width="0dp" android:layout_height="wrap_content"
+                            android:layout_weight="1" android:textColor="@color/color_text_dark"
+                            android:textSize="14sp" android:textStyle="bold"/>
+                    </LinearLayout>
+
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                        android:orientation="horizontal" android:gravity="center_vertical"
+                        android:layout_marginBottom="10dp">
+                        <TextView android:layout_width="100dp" android:layout_height="wrap_content"
+                            android:text="البريد:" android:textColor="@color/color_text_medium"
+                            android:textSize="14sp"/>
+                        <TextView android:id="@+id/tv_email"
+                            android:layout_width="0dp" android:layout_height="wrap_content"
+                            android:layout_weight="1" android:textColor="@color/color_text_dark"
+                            android:textSize="14sp"/>
+                    </LinearLayout>
+
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                        android:orientation="horizontal" android:gravity="center_vertical">
+                        <TextView android:layout_width="100dp" android:layout_height="wrap_content"
+                            android:text="تاريخ الانضمام:" android:textColor="@color/color_text_medium"
+                            android:textSize="14sp"/>
+                        <TextView android:id="@+id/tv_joined"
+                            android:layout_width="0dp" android:layout_height="wrap_content"
+                            android:layout_weight="1" android:textColor="@color/color_text_dark"
+                            android:textSize="14sp"/>
+                    </LinearLayout>
+
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- Subscription Status Card -->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/card_sub_status"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="3dp"
+                app:cardBackgroundColor="@color/white"
+                android:layout_marginBottom="12dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="20dp">
+
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:text="حالة الاشتراك"
+                        android:textSize="16sp" android:textStyle="bold"
+                        android:textColor="@color/color_text_dark"
+                        android:layout_marginBottom="12dp"/>
+
+                    <TextView android:id="@+id/tv_sub_status"
+                        android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:textSize="18sp" android:textStyle="bold"
+                        android:layout_marginBottom="8dp"/>
+
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                        android:orientation="horizontal" android:gravity="center_vertical"
+                        android:layout_marginBottom="6dp">
+                        <TextView android:layout_width="100dp" android:layout_height="wrap_content"
+                            android:text="الباقة:" android:textColor="@color/color_text_medium"
+                            android:textSize="14sp"/>
+                        <TextView android:id="@+id/tv_plan_name"
+                            android:layout_width="0dp" android:layout_height="wrap_content"
+                            android:layout_weight="1" android:textColor="@color/color_text_dark"
+                            android:textSize="14sp" android:textStyle="bold"/>
+                    </LinearLayout>
+
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                        android:orientation="horizontal" android:gravity="center_vertical">
+                        <TextView android:layout_width="100dp" android:layout_height="wrap_content"
+                            android:text="الصلاحية:" android:textColor="@color/color_text_medium"
+                            android:textSize="14sp"/>
+                        <TextView android:id="@+id/tv_sub_expiry"
+                            android:layout_width="0dp" android:layout_height="wrap_content"
+                            android:layout_weight="1" android:textColor="@color/color_text_dark"
+                            android:textSize="14sp"/>
+                    </LinearLayout>
+
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- Subscribe Button -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_subscribe"
+                android:layout_width="match_parent"
+                android:layout_height="54dp"
+                android:text="اشترك الآن"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="@color/white"
+                app:cornerRadius="14dp"
+                android:backgroundTint="@color/color_primary_brand"
+                android:layout_marginBottom="10dp"/>
+
+            <View android:id="@+id/admin_divider"
+                android:layout_width="match_parent" android:layout_height="1dp"
+                android:background="@color/color_border"
+                android:layout_marginTop="8dp" android:layout_marginBottom="8dp"
+                android:visibility="gone"/>
+
+            <!-- Admin Panel Button -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_admin_panel"
+                android:layout_width="match_parent"
+                android:layout_height="54dp"
+                android:text="لوحة الإدارة"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                android:textColor="@color/color_primary_brand"
+                app:cornerRadius="14dp"
+                android:backgroundTint="@color/color_primary_light"
+                app:strokeColor="@color/color_primary_brand"
+                app:strokeWidth="1.5dp"
+                android:visibility="gone"
+                android:layout_marginBottom="10dp"/>
+
+            <!-- Logout Button -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_logout"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:text="تسجيل الخروج"
+                android:textSize="14sp"
+                android:textColor="@color/color_error"
+                app:cornerRadius="14dp"
+                android:backgroundTint="@color/color_error_bg"
+                app:strokeColor="@color/color_error"
+                app:strokeWidth="1dp"/>
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+</LinearLayout>

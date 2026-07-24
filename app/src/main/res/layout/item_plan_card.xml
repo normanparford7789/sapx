@@ -12,7 +12,7 @@
     app:strokeColor="@color/color_border"
     app:strokeWidth="1.5dp"
     app:checkedIconTint="@color/color_primary_brand"
-    app:checkedIconDrawable="@drawable/ic_check_circle"
+    app:checkedIcon="@drawable/ic_check_circle"
     style="?attr/materialCardViewStyle">
 
     <LinearLayout

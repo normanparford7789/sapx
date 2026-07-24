@@ -33,13 +33,13 @@
                 android:layout_width="wrap_content" android:layout_height="wrap_content"
                 android:text="محظور" android:textSize="11sp"
                 android:layout_marginEnd="4dp"
-                android:chipBackgroundColor="@color/color_error_bg"
+                app:chipBackgroundColor="@color/color_error_bg"
                 style="@style/Widget.MaterialComponents.Chip.Entry"
                 android:visibility="gone"/>
             <com.google.android.material.chip.Chip android:id="@+id/chipAdmin"
                 android:layout_width="wrap_content" android:layout_height="wrap_content"
                 android:text="مدير" android:textSize="11sp"
-                android:chipBackgroundColor="@color/color_primary_light"
+                app:chipBackgroundColor="@color/color_primary_light"
                 style="@style/Widget.MaterialComponents.Chip.Entry"
                 android:visibility="gone"/>
         </LinearLayout>

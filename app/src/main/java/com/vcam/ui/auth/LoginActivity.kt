@@ -17,9 +17,9 @@ import com.vcam.data.AuthManager
 import com.vcam.data.SupabaseClientProvider
 import com.vcam.databinding.ActivityLoginBinding
 import com.vcam.ui.MainActivity
-import io.github.jan.supabase.auth.auth
-import io.github.jan.supabase.auth.providers.Google
-import io.github.jan.supabase.auth.providers.builtin.IDToken
+import io.github.jan.supabase.gotrue.auth
+import io.github.jan.supabase.gotrue.providers.Google
+import io.github.jan.supabase.gotrue.providers.builtin.IDToken
 import kotlinx.coroutines.launch
 
 class LoginActivity : AppCompatActivity() {

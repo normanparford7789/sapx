@@ -41,6 +41,7 @@ object SubscriptionManager {
     suspend fun createPlan(plan: SubscriptionPlan): Result<Unit> = withContext(Dispatchers.IO) {
         runCatching {
             client.from("subscription_plans").insert(plan)
+            Unit
         }
     }
 
@@ -51,6 +52,7 @@ object SubscriptionManager {
             }) {
                 filter { eq("id", planId) }
             }
+            Unit
         }
     }
 
@@ -71,7 +73,7 @@ object SubscriptionManager {
     }
 
     suspend fun createPaymentMethod(method: PaymentMethod): Result<Unit> = withContext(Dispatchers.IO) {
-        runCatching { client.from("payment_methods").insert(method) }
+        runCatching { client.from("payment_methods").insert(method); Unit }
     }
 
     suspend fun updatePaymentMethod(method: PaymentMethod): Result<Unit> = withContext(Dispatchers.IO) {
@@ -85,13 +87,14 @@ object SubscriptionManager {
             }) {
                 filter { eq("id", method.id) }
             }
+            Unit
         }
     }
 
     // ── Subscription Requests ─────────────────────────────────────────────
 
     suspend fun submitRequest(request: SubscriptionRequest): Result<Unit> = withContext(Dispatchers.IO) {
-        runCatching { client.from("subscription_requests").insert(request) }
+        runCatching { client.from("subscription_requests").insert(request); Unit }
     }
 
     suspend fun getPendingRequests(): List<SubscriptionRequestDetail> = withContext(Dispatchers.IO) {
@@ -151,6 +154,7 @@ object SubscriptionManager {
                     expiresAt = expiresAt
                 )
             )
+            Unit
         }
     }
 
@@ -160,6 +164,7 @@ object SubscriptionManager {
                 set("status", "rejected")
                 set("updated_at", Instant.now().toString())
             }) { filter { eq("id", requestId) } }
+            Unit
         }
     }
 
@@ -211,6 +216,7 @@ object SubscriptionManager {
             client.from("profiles").update({
                 set("is_banned", ban)
             }) { filter { eq("id", userId) } }
+            Unit
         }
     }
 
@@ -219,6 +225,7 @@ object SubscriptionManager {
             client.from("profiles").update({
                 set("is_admin", isAdmin)
             }) { filter { eq("id", userId) } }
+            Unit
         }
     }
 
@@ -233,6 +240,7 @@ object SubscriptionManager {
             client.from("subscriptions").insert(
                 NewSubscription(userId = userId, planId = planId, startsAt = now.toString(), expiresAt = expiresAt)
             )
+            Unit
         }
     }
 

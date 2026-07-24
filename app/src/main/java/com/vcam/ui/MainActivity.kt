@@ -158,8 +158,8 @@ class MainActivity : AppCompatActivity() {
             val btnId = resources.getIdentifier("btn_rotate_slot_$slot", "id", packageName)
             val btn = findViewById<ImageButton>(btnId) ?: continue
             btn.setOnClickListener {
-                val newRot = (MediaSlotManager.getRotation(this, slot) + 90) % 360
-                MediaSlotManager.setRotation(this, slot, newRot)
+                val newRot = (MediaSlotManager.getSlotRotation(this, slot) + 90) % 360
+                MediaSlotManager.setSlotRotation(this, slot, newRot)
                 refreshSlotUI(slot)
             }
         }
@@ -191,7 +191,7 @@ class MainActivity : AppCompatActivity() {
             } else {
                 try { android.graphics.BitmapFactory.decodeFile(path) } catch (_: Exception) { null }
             }
-            val rot = MediaSlotManager.getRotation(this, slot)
+            val rot = MediaSlotManager.getSlotRotation(this, slot)
             if (bmp != null) {
                 val matrix = android.graphics.Matrix().apply { postRotate(rot.toFloat()) }
                 val rotated = Bitmap.createBitmap(bmp, 0, 0, bmp.width, bmp.height, matrix, true)
@@ -293,13 +293,13 @@ class MainActivity : AppCompatActivity() {
             ConnectServer.setEnabled(this, isChecked)
             if (isChecked) {
                 val intent = Intent(this, VCamService::class.java).apply {
-                    action = VCamService.ACTION_LINK_ENABLE
+                    action = VCamService.ACTION_ENABLE_LINK
                 }
                 startService(intent)
                 showSnack(getString(R.string.link_enabled_msg))
             } else {
                 val intent = Intent(this, VCamService::class.java).apply {
-                    action = VCamService.ACTION_LINK_DISABLE
+                    action = VCamService.ACTION_DISABLE_LINK
                 }
                 startService(intent)
                 showSnack(getString(R.string.link_disabled_msg))

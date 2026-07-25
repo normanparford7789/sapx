@@ -21,8 +21,6 @@ object AuthManager {
                     this.password = password
                 }
                 client.auth.currentUserOrNull() ?: error("Login failed")
-            }.recoverCatching { e ->
-                throw mapAuthError(e)
             }
         }
 
@@ -48,19 +46,8 @@ object AuthManager {
                     )
                 }
                 user
-            }.recoverCatching { e ->
-                throw mapAuthError(e)
             }
         }
-
-    private fun mapAuthError(e: Throwable): Throwable {
-        val msg = e.message.orEmpty()
-        return when {
-            msg.contains("rate limit", ignoreCase = true) ->
-                IllegalStateException("RATE_LIMIT_EXCEEDED")
-            else -> e
-        }
-    }
 
     suspend fun signOut() = withContext(Dispatchers.IO) {
         runCatching { client.auth.signOut() }

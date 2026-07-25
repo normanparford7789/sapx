@@ -65,9 +65,7 @@ class LoginActivity : AppCompatActivity() {
             result.fold(
                 onSuccess = { goToMain() },
                 onFailure = {
-                    val msg = if (it.message == "RATE_LIMIT_EXCEEDED") getString(R.string.rate_limit_exceeded)
-                             else it.message ?: getString(R.string.login_failed)
-                    showError(msg)
+                    showError(it.message ?: getString(R.string.login_failed))
                 }
             )
         }

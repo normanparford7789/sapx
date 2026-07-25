@@ -60,6 +60,8 @@
     <string name="register_failed">فشل إنشاء الحساب. ربما البريد مستخدم مسبقاً</string>
     <string name="passwords_not_match">كلمتا المرور غير متطابقتين</string>
     <string name="password_too_short">كلمة المرور يجب أن تكون 6 أحرف على الأقل</string>
+    <string name="invalid_email">صيغة البريد الإلكتروني غير صحيحة. تأكد من كتابته بدون مسافات وبشكل صحيح (مثال: name@gmail.com)</string>
+    <string name="rate_limit_exceeded">تم إرسال عدة محاولات خلال وقت قصير. انتظر دقيقة ثم حاول مرة أخرى</string>
     <string name="account_created">تم إنشاء الحساب بنجاح</string>
     <string name="login_required">يجب تسجيل الدخول أولاً</string>
     <string name="logout">تسجيل الخروج</string>

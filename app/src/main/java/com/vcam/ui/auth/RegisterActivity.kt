@@ -44,6 +44,10 @@ class RegisterActivity : AppCompatActivity() {
                 showError(getString(R.string.password_too_short))
                 return
             }
+            !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches() -> {
+                showError(getString(R.string.invalid_email))
+                return
+            }
         }
 
         setLoading(true)
@@ -58,7 +62,11 @@ class RegisterActivity : AppCompatActivity() {
                     })
                     finish()
                 },
-                onFailure = { showError(it.message ?: getString(R.string.register_failed)) }
+                onFailure = {
+                    val msg = if (it.message == "RATE_LIMIT_EXCEEDED") getString(R.string.rate_limit_exceeded)
+                             else it.message ?: getString(R.string.register_failed)
+                    showError(msg)
+                }
             )
         }
     }

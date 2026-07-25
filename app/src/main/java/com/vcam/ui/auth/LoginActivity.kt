@@ -54,13 +54,21 @@ class LoginActivity : AppCompatActivity() {
             Toast.makeText(this, getString(R.string.fill_all_fields), Toast.LENGTH_SHORT).show()
             return
         }
+        if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            Toast.makeText(this, getString(R.string.invalid_email), Toast.LENGTH_LONG).show()
+            return
+        }
         setLoading(true)
         lifecycleScope.launch {
             val result = AuthManager.signIn(email, password)
             setLoading(false)
             result.fold(
                 onSuccess = { goToMain() },
-                onFailure = { showError(it.message ?: getString(R.string.login_failed)) }
+                onFailure = {
+                    val msg = if (it.message == "RATE_LIMIT_EXCEEDED") getString(R.string.rate_limit_exceeded)
+                             else it.message ?: getString(R.string.login_failed)
+                    showError(msg)
+                }
             )
         }
     }
